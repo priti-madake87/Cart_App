@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 50px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+        }
+        input {
+            width: 100px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 5px 10px;
+            border: none;
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .net-total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cart Page</h1>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Product Rate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        <tbody id="cartBody"></tbody>
+        <tr>
+            <td colspan="3" class="net-total">Net Total:</td>
+            <td><input type="text" id="nettotal" readonly></td>
+        </tr>
+    </table>
+
+    <script>
+        const products = 5; // Number of products
+        let cartBody = document.getElementById("cartBody");
+
+        for (let i = 0; i < products; i++) {
+            cartBody.innerHTML += `
+                <tr>
+                    <td><input type="text" placeholder="Product Name"></td>
+                    <td><input type="text" id="rate${i}" onkeyup="calculate(${i})" placeholder="Rate"></td>
+                    <td>
+                        <button onclick="changeQuantity(${i}, -1)">-</button>
+                        <input type="text" id="qnt${i}" value="1">
+                        <button onclick="changeQuantity(${i}, 1)">+</button>
+                    </td>
+                    <td><input type="text" id="total${i}" class="tot" readonly></td>
+                </tr>`;
+        }
+
+        function changeQuantity(index, value) {
+            let qnt = document.getElementById("qnt" + index);
+            let newValue = Math.max(1, parseInt(qnt.value) + value);
+            qnt.value = newValue;
+            calculate(index);
+        }
+
+        function calculate(index) {
+            let rate = document.getElementById("rate" + index).value || 0;
+            let qnt = document.getElementById("qnt" + index).value || 1;
+            document.getElementById("total" + index).value = rate * qnt;
+            updateNetTotal();
+        }
+
+        function updateNetTotal() {
+            let totalFields = document.getElementsByClassName("tot");
+            let netTotal = 0;
+            for (let field of totalFields) {
+                netTotal += Number(field.value) || 0;
+            }
+            document.getElementById("nettotal").value = netTotal;
+        }
+    </script>
+</body>
+</html>
